@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sarvar Aliyev — Backend Muhandis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0906;
+    --bg-2:#121009;
+    --panel:#161309;
+    --gold:#c6a15b;
+    --gold-bright:#eecf8e;
+    --gold-dim:#8a6f3a;
+    --text:#ece5d6;
+    --muted:#8f8672;
+    --muted-2:#5f5848;
+    --line: rgba(198,161,91,0.22);
+    --line-strong: rgba(198,161,91,0.5);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    font-weight:400;
+    line-height:1.6;
+    overflow-x:hidden;
+    background-image:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(198,161,91,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 20%, rgba(198,161,91,0.06), transparent 60%);
+  }
+  ::selection{background:var(--gold-dim);color:#0a0906;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 40px;}
+
+  a{color:inherit;text-decoration:none;}
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--gold);
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:24px;height:1px;
+    background:var(--gold);
+    display:inline-block;
+  }
+
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;letter-spacing:-0.01em;}
+
+  /* NAV */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(10,9,6,0.72);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;
+    transition:border-color .4s ease;
+  }
+  nav.scrolled{border-bottom-color:var(--line);}
+  .nav-inner{
+    max-width:1180px;margin:0 auto;padding:20px 40px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .brand{
+    font-family:'Fraunces',serif;font-size:19px;font-weight:600;
+    display:flex;align-items:center;gap:10px;color:var(--gold-bright);
+  }
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);}
+  .nav-links{display:flex;gap:38px;font-size:14px;color:var(--muted);}
+  .nav-links a{position:relative;padding:4px 0;transition:color .3s;}
+  .nav-links a:hover{color:var(--gold-bright);}
+  .nav-links a::after{
+    content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);
+    transition:width .3s ease;
+  }
+  .nav-links a:hover::after{width:100%;}
+
+  /* HERO */
+  header.hero{
+    min-height:100vh;
+    display:flex;align-items:center;
+    position:relative;
+    padding-top:90px;
+  }
+  .hero-grid{
+    display:grid;grid-template-columns:1.25fr 0.75fr;gap:60px;align-items:center;width:100%;
+  }
+  .hero-kicker{margin-bottom:26px;}
+  .hero h1{
+    font-size:clamp(42px,6vw,74px);
+    line-height:1.04;
+    color:var(--text);
+    margin-bottom:22px;
+  }
+  .hero h1 em{
+    font-style:italic;color:var(--gold-bright);
+    background:linear-gradient(120deg, var(--gold-bright), var(--gold));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .hero p.lead{
+    font-size:18px;color:var(--muted);max-width:520px;margin-bottom:38px;
+  }
+  .hero-cta{display:flex;gap:16px;align-items:center;flex-wrap:wrap;}
+  .btn{
+    font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:0.04em;
+    padding:15px 30px;border-radius:2px;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:all .3s ease;
+  }
+  .btn-gold{
+    background:linear-gradient(135deg, var(--gold-bright), var(--gold));
+    color:#100d06;font-weight:500;
+    box-shadow:0 4px 24px rgba(198,161,91,0.25);
+  }
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(198,161,91,0.4);}
+  .btn-ghost{
+    border:1px solid var(--line-strong);color:var(--text);
+  }
+  .btn-ghost:hover{border-color:var(--gold);background:rgba(198,161,91,0.06);}
+
+  .plaque{
+    position:relative;
+    background:linear-gradient(160deg, var(--panel), #0d0b06);
+    border:1px solid var(--line);
+    padding:38px 34px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03), 0 30px 60px -20px rgba(0,0,0,0.7);
+  }
+  .plaque::before{
+    content:'';position:absolute;inset:6px;border:1px solid rgba(198,161,91,0.15);pointer-events:none;
+  }
+  .plaque::after{
+    content:'';position:absolute;top:-1px;left:-1px;width:16px;height:16px;
+    border-top:2px solid var(--gold);border-left:2px solid var(--gold);
+  }
+  .avatar-frame{
+    width:120px;height:120px;border-radius:50%;
+    padding:5px;
+    background:conic-gradient(from 200deg, var(--gold-dim), var(--gold-bright), var(--gold-dim));
+    margin:0 auto 24px;
+    box-shadow:0 0 40px rgba(198,161,91,0.25);
+  }
+  .avatar-frame img{
+    width:100%;height:100%;border-radius:50%;object-fit:cover;display:block;
+    border:3px solid #0a0906;
+    image-rendering:-webkit-optimize-contrast;
+  }
+  .plaque-name{text-align:center;font-size:21px;color:var(--gold-bright);margin-bottom:4px;}
+  .plaque-role{text-align:center;font-size:12px;color:var(--muted);font-family:'JetBrains Mono',monospace;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:22px;}
+  .plaque-divider{height:1px;background:var(--line);margin:20px 0;}
+  .plaque-stats{display:flex;justify-content:space-between;text-align:center;}
+  .plaque-stats div span{display:block;}
+  .plaque-stats .num{font-family:'Fraunces',serif;font-size:24px;color:var(--gold-bright);}
+  .plaque-stats .lbl{font-size:11px;color:var(--muted-2);margin-top:2px;text-transform:uppercase;letter-spacing:0.06em;}
+
+  section{padding:130px 0;position:relative;}
+  .section-head{margin-bottom:60px;max-width:640px;}
+  .section-head h2{font-size:clamp(30px,4vw,44px);margin-top:16px;color:var(--text);}
+  .section-head p{color:var(--muted);margin-top:16px;font-size:16px;}
+
+  /* ABOUT */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:start;}
+  .about-grid p{color:var(--muted);font-size:16px;margin-bottom:18px;}
+  .about-grid p strong{color:var(--text);font-weight:500;}
+  .principles{display:flex;flex-direction:column;gap:0;}
+  .principle{
+    padding:24px 0;border-bottom:1px solid var(--line);
+    display:grid;grid-template-columns:50px 1fr;gap:20px;
+  }
+  .principle:first-child{padding-top:0;}
+  .principle .idx{font-family:'JetBrains Mono',monospace;color:var(--gold);font-size:13px;padding-top:3px;}
+  .principle h4{font-family:'Fraunces',serif;font-weight:500;font-size:18px;margin-bottom:6px;color:var(--text);}
+  .principle p{color:var(--muted);font-size:14.5px;margin:0;}
+
+  /* SKILLS */
+  .skills-wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+  .skill-card{background:var(--bg-2);padding:34px 30px;transition:background .3s;}
+  .skill-card:hover{background:#191408;}
+  .skill-card .tag{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:14px;display:block;}
+  .skill-card h3{font-size:19px;color:var(--text);margin-bottom:12px;font-weight:500;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--muted);
+    border:1px solid var(--line);padding:5px 11px;border-radius:20px;
+    transition:all .25s;
+  }
+  .chip:hover{border-color:var(--gold);color:var(--gold-bright);}
+
+  /* PROJECTS */
+  .projects{display:flex;flex-direction:column;gap:1px;}
+  .project{
+    display:grid;grid-template-columns:90px 1.1fr 1fr auto;gap:30px;align-items:center;
+    padding:30px 0;border-bottom:1px solid var(--line);
+    transition:padding-left .35s ease;
+  }
+  .project:first-child{border-top:1px solid var(--line);}
+  .project:hover{padding-left:14px;}
+  .project .pnum{font-family:'JetBrains Mono',monospace;color:var(--gold-dim);font-size:13px;}
+  .project h3{font-size:22px;color:var(--text);font-weight:500;}
+  .project .pdesc{color:var(--muted);font-size:14.5px;}
+  .project .pstack{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--gold);text-align:right;}
+  .project .arrow{
+    width:38px;height:38px;border:1px solid var(--line-strong);border-radius:50%;
+    display:flex;align-items:center;justify-content:center;color:var(--gold);
+    transition:all .3s;flex-shrink:0;
+  }
+  .project:hover .arrow{background:var(--gold);color:#0a0906;transform:rotate(45deg);}
+
+  /* EXPERIENCE / AWARDS */
+  .timeline{position:relative;padding-left:34px;}
+  .timeline::before{content:'';position:absolute;left:6px;top:6px;bottom:6px;width:1px;background:var(--line);}
+  .tl-item{position:relative;padding-bottom:48px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-item::before{
+    content:'';position:absolute;left:-34px;top:4px;width:13px;height:13px;border-radius:50%;
+    background:var(--bg);border:2px solid var(--gold);
+  }
+  .tl-year{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--gold);letter-spacing:0.08em;margin-bottom:8px;display:block;}
+  .tl-item h3{font-size:20px;color:var(--text);margin-bottom:6px;font-weight:500;}
+  .tl-item .org{color:var(--gold-bright);font-size:14px;margin-bottom:10px;display:block;}
+  .tl-item p{color:var(--muted);font-size:14.5px;max-width:600px;}
+
+  .awards-strip{
+    margin-top:80px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  }
+  .award{
+    text-align:center;padding:36px 20px;border:1px solid var(--line);position:relative;
+    background:radial-gradient(circle at 50% 0%, rgba(198,161,91,0.06), transparent 70%);
+  }
+  .award .medal{
+    width:44px;height:44px;margin:0 auto 18px;border-radius:50%;
+    border:1px solid var(--gold);display:flex;align-items:center;justify-content:center;
+    color:var(--gold-bright);font-family:'Fraunces',serif;font-size:16px;
+  }
+  .award h4{font-size:15px;color:var(--text);margin-bottom:8px;font-weight:500;}
+  .award p{font-size:12.5px;color:var(--muted-2);font-family:'JetBrains Mono',monospace;}
+
+  /* CONTACT */
+  .contact-plaque{
+    text-align:center;padding:90px 60px;position:relative;
+    background:linear-gradient(160deg, var(--panel), #0d0b06);
+    border:1px solid var(--line);
+  }
+  .contact-plaque::before{content:'';position:absolute;inset:8px;border:1px solid rgba(198,161,91,0.15);}
+  .contact-plaque .eyebrow{justify-content:center;margin-bottom:22px;}
+  .contact-plaque .eyebrow::before{display:none;}
+  .contact-plaque h2{font-size:clamp(30px,5vw,52px);margin-bottom:20px;}
+  .contact-plaque p{color:var(--muted);max-width:480px;margin:0 auto 36px;font-size:16px;}
+  .contact-links{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;}
+
+  footer{padding:40px 0;text-align:center;color:var(--muted-2);font-size:13px;font-family:'JetBrains Mono',monospace;}
+
+  .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease, transform .8s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  @media(max-width:900px){
+    .hero-grid{grid-template-columns:1fr;}
+    .about-grid{grid-template-columns:1fr;gap:40px;}
+    .skills-wrap{grid-template-columns:1fr;}
+    .project{grid-template-columns:1fr;gap:10px;text-align:left;}
+    .project .pstack{text-align:left;}
+    .project .arrow{display:none;}
+    .awards-strip{grid-template-columns:1fr;}
+    .nav-links{display:none;}
+    .wrap{padding:0 22px;}
+    .contact-plaque{padding:60px 26px;}
+  }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <div class="nav-inner">
+    <div class="brand"><span class="dot"></span>S. Aliyev</div>
+    <div class="nav-links">
+      <a href="#about">Men haqimda</a>
+      <a href="#skills">Ko'nikmalar</a>
+      <a href="#work">Loyihalar</a>
+      <a href="#experience">Tajriba</a>
+      <a href="#contact">Aloqa</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero wrap">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow hero-kicker">Backend muhandis &amp; tizim arxitektori</div>
+      <h1>Ishonchli tizimlar<br>quraman, <em>puxta</em> va<br>aniq yondashuvda.</h1>
+      <p class="lead">Salom, men Sarvar Aliyevman — 6 yildan ortiq tajribaga ega backend muhandis. Yuqori yuklamali tizimlar, toza arxitektura va o'lchovga chidamli infratuzilma ustida ishlayman.</p>
+      <div class="hero-cta">
+        <a href="#work" class="btn btn-gold">Loyihalarni ko'rish →</a>
+        <a href="#contact" class="btn btn-ghost">Bog'lanish</a>
+      </div>
+    </div>
+    <div class="plaque reveal">
+      <div class="avatar-frame"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAIAAADYYG7QAAAQAElEQVR4AXyYaaxdV3XH93Sme++79713Pb2YEoLtGDsQnKEEqCkgnDKkjRBpIGpEFShDmzYgQJVAjIIUSNqCoKqKEP2CUNJ+aVUh2i+UsVBSpZCmTmxISOLEju337Dfde+49wx76O/fEDydC3fp737XXXnut/157ONtPaRMDpaMWyCZKQBSncZKBJO2kWTfr9DrduWRuTnSTaMe8iLVQaig620VXiEibrCuSVCQi6YookSKZT4fbhksm6WXZAkjT+SQZxEkPRHEXmCjTJiWoVGYLNJX4dUVKqZRqa4QtGKXjOCa+iCLGBRGc8AguBCV0hLbXFZ0Oo51zVVWlcYyTi4Hxc0Bvq2mFZxFC1QKLLRL62SWJ4kQbnSRCSCt8LZxoSlBaO+HqjQ0xmaRpmiSJlsoYoy6U1nNbNyOEuFgWF8qvCNHdKhEAMnWL1ifEEFhaJWRmYhPHpKcmQzIIKXJX+EgzCmRZRiLhQk87ioGg9YbBloAMtpoIijZAamuEFjRDCNQtWnestiQXXmVRnMUJKQkQMkLIYEWIO4kwUvd7nV7mfK2CxtjASGuGt9hyLi4UNK3YCg2hiwO32q0aAbS+9KwYqUDGVs8y+AIhVbOXjNwcj4SzLNbc3ByLxcJxXtRFRUpJbCmbuhWkbGQ5K2iA+rVsMNjyM6PRTLEV4igCc1mHg6eE9MJDB0I6UkJY0en8zpEjh66+Okpi2mmcbPnBZwuibgnIFwM9o57R0EBq61ZA3nIHm1aOKNp0ooRVQ4OlJkteuKqc2774h7f+wSc+9rHrr7++snZtY8MYg5PngCH/DxpCWwMIsCUTt3XXppAuNCxH8PLs2ZVTJ56EU6/X27GwGOqazbvzkqXPfvazn/7kpzo6Xl9fr2ztvXcuMBCfMKDekrkU8MYk0begFxALG4XUgr5WoK7rxiOcOC+MpLm5ubmysvL0mdN5nk/zyWhzvdfNFhcGS3P9K1542Rf/8u7XHj4ceb9zuPiDH35/UkwHC4tFVVIYCzl84gce+ATWWmi1ESGBABvMnsUG7XOAEcO44iaTySZlY6MsClzHhptRbVscispWo82Ol/9z//3DQX+QdIrN8bFjx3rzg2ldlba2tglMJDwzEBAeoMH5lhI9zeB9s2Rom8aFfzQBk0AxnU5HoxFMIAQzoSRXDmQW5+cX5/u7d+4oR2NcPH9h+K//9C8//M536jw//uDR0WjU689LreIkieIYV+QGnzikJjaE2lQhoEEPEEBzymi0fBFQtQPIMyDhoK4qDBq9MSpLXfC7du26fO++/Xv39TvdFw+fd/1vHf7oBz/0xPFHJufX7//JfxZFUbp6uHNHOteltPckDAC7kOaWEkIExTl1419rpidowAM0KsU3QFPITVVVdCGTEmapVMPeh+Cl+M1rrj3ymte+aP/+TOthr5d59fs3vvnl117TT9P/+N73B4NB2u1YGaRSUZpxIQF4dGYFNgC3gIjEbYFMCMXPFrAAxGYqGKHHAg1AQBOkgD6rcNVVV73kihfzAck3Nu2k+OXDD5945JGXHboa+cnHHiNe1ulMy8KJwFgckhjQng/8kBJrm70VQiAKwD81UIrrvQErjrJJD+NBkkYmUlKxzzi9joHM1uhEmlgp3V0Y1MGfO33Kjta2x2lUuzgxeTF98OGj3e7c5tnz07XxfH/BxInEuRbaSEA852xRFHk+Jv1sCZihVLOCAFeu2RpOgSs/iotJyXtifn7+9OmTTjgdyziLTWJUFEsdC5lKn4SpM3Eq57uD3cMHfvKjoRBDZ3U+Kuw0N+679/+XD3p3d3uWB1v6KE6srYJzwntqV9e2ZnfV3tVaCWC0Zo1AO29b8wV03lu+2dZ7r5TS2ghBHRup6qKcjkd1WUofGoSggkh0kpoor4q1zY3jDx0thZisrMnaWS/yuv7p0QcrW3P4eYMVk/HK6jmWj+TxjanqYlrkbM2inJAea5slc47cBwrpAYpijNCkNNZaS7YOCEFEUdrtDIxKlIg4uN006aRRx6heEmlvfVG4ycQz26ndZfpR0jOmK1XEDf7Q0WNlWVpZm0TOzXd2LW1bW19tb416dtMybeccMjWgCSAkZkVKqUzUEDLGoFVKkZ5JXggvJ+OimNShtkYEQwA/1TKPVZ7qerqxsnr61KnHHmN9O91+UGZ5dX31/OaPf3RfkiT9hX5hy7OrZ8+vr5w+e0pH+BSkJM9zLrO6rpk6J47YFwM+NKlV7QUIwWNKO4QwzavgSYSMdZTxzDA6lnUkoTLJ4smuoerGrlhfPvHocbb8KJ/W3mzmlY7Sb3/7O17I5XMrq6O1Sy5duvGm33vnu2+74YYbDh8+vGfPnl6vR4hmyYrCWgstQApAS4XQgE3NQSZJGm0cJ2nSgRbP+ixOep1ON+GRlUs7TYyY64p+Zl056kRibfmR0frp4ULPKy+SKETRLx795U//+wF2TNrpBC3Ori5/7wf//rW//+o993zjm9/85n333XfixIk8z4lCFrmWEFoQDrQyNfy0FFLpmFuMhYO1t85EqipzX+d1ObaV7/XEwRepV71i8OpX7bj2UPSSA+LMUz8brZ+QUSVSsemmG+Xk2M+Psyc2NjYm7F1XF3WFXE6mTDqKIp5sCwsL/X6fEBx7ngMYg4s3UEtLeac5lWx2lhmU1XScb5aT3EQyTQRUlnaJ665ZvOWtr77jjrf8+Yduvuuu9//xu2/spGMZ1oSZpgupi72NxNHjx7JetjEeuWBLZ/OSuFW3O+e9YJuzr1dXV6HIqpGhwWDAqkEIbHGSs0ImRBz1iqlN4iztpKPRhgulNv7tt978J7e/64MfeNeHP/yOd/zRm2+66fCey7Lhtmr7DvvGG65973ve8vJXHHj7u2/53bfecPm1B3NZHv35/wrp+ZiSkqClNElwXByehwqEUJJ7QHi2EfziOKZJVugCCPChVkZnWsWRjkgmh0xHMmIzx/L5l+6+7Z23/umfveeNb3jdwYMvMLpYOfdoPj69cv5x5zd371581Wuuu/m2t9182y17rzq4kq+XvvbcCKy3qytry8pWk7rMp0Jw7RGrAYEBEhuF3GzJNFHCBigdTPAalTaSKQppTSyF5uD7bdu2MWx5eZn0RmncSeM0MzuWhmb7fLfX49tZOOs7qZnvu9Q4KXhfy+B8sBSWpp66OrfNjcrtopRoPoOBgkBuSBUCPFogt1AhSFczOS+Er6qJ8xWCC04qUzVXvOn1ts33d4r+rm5nuLlRLi9vjk6vbmyWlY0nTo+dyqUulJaRllIKQUTv+U+RD1rISKrwzFXMw7vpC6ERiM2CaK2Vaoj6CwU93zFvXSWkE8LXtqhcFZSw3k1Lu7Y2VXowGFx65vT0zENn8nFaFnNK7thYM/k46fV/Y3Hnvnhhdx31RlAXmmDe1c5WztVBONjEbEbvHUdmxkPOCmZooqjdJA0hmgB9Q0gbIYWNtERwvmS40iJ4Mehv16andb/Tu0T6BVv2Br3LFuf3RfGSjnYk2SVGbz+3Kc+sFtNg4rn5ynlWylr2D4Ss95b/ownnpSBQ8N5DhqwAhDY8AhmiFmJmNCOtoBIE1k5ppuKdF0GSIXV2+Xw5VeurtSvS4eLeSO98+mR5/NjyE0+MJ9PuXPfSONlZVNm0joPueZnWtvmiC+G1EkxJepa9tlWpZotCSK01B57DhQZ+VQV1CxsoRlFELzJmyik41F4287A4dSI4H8i8s/ML/bKuV9dGWW/7zudd8fw9173slW85dO3rX7Dvmqi3bXPquAPjSAflzq+tBN94VybRcWJ0jHeyVIWa8MgAwRgTRRFCCIG7gIyiN7PyK0LjetwZ9GwI47zksamCqCf1ju2LRbH68U9+6M67P/65L37+U3fd/Zm//rvPf/mez335H77wt/fe9aWv3fmlv/noX3zi83d+5CtfvvO73/vn4TCRVREJU8todVyN1orgjElSHZnKWbaxdU5ImWaZVKoo2Rg+63TiJEFJV20tNWY0lTCyIr2q2URKRouL8wf27z/00pc8+ouHT5x8dGX17Gg6LuBrOmnvkoXtl5l08dza5MTpsytr506dfPyxRx9KM/2GN75uadeOyThfXd9Isrlt23ZooZwIg+Ei89cXCrkhJWJWWDKuBmvJoydhW8DG1LVTkmQm9EYm5qPDl/nKKw8deunVvJ2vvPLKAweu2Lvn8r2X7798/4Frrrnula/47Te96cabbnrbkde9/vJ9B4aL2xcWhkeOHDl48OBcv8+ieO8n+bjIR2tra0SHBGFgZS4UpXU920NYblFpBSVls5mVMkqaoqjW1zdPPv30Az978N57//HrX//GV77y1b/6whc//Zk7P/Lhj73vjve/9z233/K2W2+//Y73v++D77vjA3ff/YVvfevfeHXcc8+9P/7RT1ZWznvXfLngtGfv3hfu23fJ7iUpA4RawAnACgMhJSyR0SDA+wIhrh0nyA1wNkwnxcmnzjz08CNzg/ks62qVSBFJnQSpytqOx0WWznWyeWfl+XOT8+fG00lVTOvz59ZOnHgKv0tLSzzJQ3B5Pnr69KknH3+c2G1UOLUh29hJkqRp84e29tzRi56amzpIHVlrSaExsTFJCFy4YjyebIzGozGv4Kos67IOReWnZf3kyeWTJ89OJmWHT0kU5+Myz6dRlBRFwSdzMpngl2smz3P49QYDosIJGTboCQQQIAQVoHVzxdMLG6CqooqjhD0YrI/jBNdS6E6nN8mrqvSVFWVlJ9NqnBeTaVGUNuPvrMLUVQBVbafTUgjV788vLAy1joqiKHlTW05BSNN4OFwQorn0YAAP0AaGBBRB2+tnpe1SwntSyiRgh51zvqqbo8p+staTLetFWbiS4E54pyo4Csnd5b2ITNLr9aXQq+fX19c2oYJTIQRPZhYujuPxeFxVVT0rcKIXEsSia8bhmartYiAcVBxntrQMwZR+MjyYX8i6nRHOJlMCT8uKOyTNel4oyyAhI5VEmr2lghfsOZLCKA6m0TGucQWzoiBVU+eaK4ZBUMQ/azoajYgCM2iRMIKgYUhDRSn0Cmt+qJ8NiYuEmytJlDSWOLwG+CRIgzFgPPYIeEe4uIktkbZAFzaEBAjtEHoZBUXWBGYAAQ0G3MzMv4lG+2Jk3W6HvyJ0uzqKguDr5oOQUpMk3zybhMfYB++DY5O0rk2k8AuDEOjwLDeg6b2HDYAro1rACdBFk+EAy0bmHx5DU3DR/KDhh25WOkkSY0yroZ6BTi8k9EIQDHGNU+mlCgzBgG4CE554CE0v216pthcD8kH6MahmBQEz9BgAlqzxACfRTDqI5kx4aufYMEEaJbQUSnBbCSFckw96nwUfCD1bVfY5I0OTHnehQIjZQwIgMD0m2Ww4YwhPL4OxRQhMEOqhiQGL9mFHzRIQWmDR/MwCIOCLejaGtau9hy4vDXxKdm5ZTlksQhKMDQ4QAAIDW7QG2ABkehHowgWeAc4JqqTwPHYPPwAAAIZJREFUQEjfAHUDH4JTEbmBaIA+P80w8iS9IqewFI410kYqDXXL/7qlDMYowkCiBTJg3XHJuhCM9ECCwBxDNOQGJb1a65YZXTP36C4CWlo40rp5lTKMZgMpqaVs6pkN5PCjcFrXjv2wFQNNCybTMqALGWs40cWFzlU+nU65b3AlOS36GU7/BwAA///RiNGCAAAABklEQVQDAFuUUa+1vSGNAAAAAElFTkSuQmCC" alt="Sarvar Aliyev"></div>
+      <div class="plaque-name">Sarvar Aliyev</div>
+      <div class="plaque-role">Senior Backend Engineer</div>
+      <div class="plaque-divider"></div>
+      <div class="plaque-stats">
+        <div><span class="num">6+</span><span class="lbl">Yil tajriba</span></div>
+        <div><span class="num">40+</span><span class="lbl">Loyiha</span></div>
+        <div><span class="num">12</span><span class="lbl">Sertifikat</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Men haqimda</div>
+      <h2>Detallarga e'tibor — bu mening ish uslubim.</h2>
+    </div>
+    <div class="about-grid">
+      <div class="reveal">
+        <p>Men <strong>backend arxitektura</strong> va <strong>tizimlar dizayni</strong> yo'nalishida ixtisoslashgan muhandisman. Karyeramni kichik startaplardan boshlab, hozirda yuqori yuklamali tizimlarni loyihalash va boshqarish darajasiga yetib keldim.</p>
+        <p>Mening yondashuvim oddiy: <strong>ishonchlilik</strong>, <strong>tozalik</strong> va <strong>o'lchovga chidamlilik</strong> — har bir kod qatorida shu uchtasi bo'lishi shart. Murakkab masalalarni sodda, saqlanuvchi yechimlarga aylantirishni yaxshi ko'raman.</p>
+        <p>Jamoada ishlashda ochiq muloqot va bilim almashishga alohida e'tibor beraman — chunki yaxshi tizim yaxshi jamoadan tug'iladi.</p>
+      </div>
+      <div class="principles reveal">
+        <div class="principle">
+          <span class="idx">01</span>
+          <div><h4>Arxitektura birinchi</h4><p>Har bir loyihani uzoq muddatli o'sishni hisobga olib loyihalayman.</p></div>
+        </div>
+        <div class="principle">
+          <span class="idx">02</span>
+          <div><h4>Aniq va o'lchanadigan</h4><p>Metrikalar va monitoring — qaror qabul qilishning asosi.</p></div>
+        </div>
+        <div class="principle">
+          <span class="idx">03</span>
+          <div><h4>Xavfsizlik — standart</h4><p>Har bir tizim boshidanoq xavfsiz bo'lishi kerak, keyin emas.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="skills" style="background:var(--bg-2);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Texnik ko'nikmalar</div>
+      <h2>Ishlatadigan asboblar to'plami.</h2>
+    </div>
+  </div>
+  <div class="wrap reveal">
+    <div class="skills-wrap">
+      <div class="skill-card">
+        <span class="tag">Backend</span>
+        <h3>Server va API</h3>
+        <div class="chip-row">
+          <span class="chip">Go</span><span class="chip">Python</span><span class="chip">Node.js</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="tag">Infratuzilma</span>
+        <h3>DevOps &amp; Cloud</h3>
+        <div class="chip-row">
+          <span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">AWS</span><span class="chip">CI/CD</span><span class="chip">Terraform</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <span class="tag">Arxitektura</span>
+        <h3>Tizim dizayni</h3>
+        <div class="chip-row">
+          <span class="chip">Microservices</span><span class="chip">Kafka</span><span class="chip">gRPC</span><span class="chip">GraphQL</span><span class="chip">DDD</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Tanlangan loyihalar</div>
+      <h2>Amalda ishlagan yechimlar.</h2>
+    </div>
+    <div class="projects reveal">
+      <div class="project">
+        <span class="pnum">01</span>
+        <h3>PayFlow — to'lov shlyuzi</h3>
+        <p class="pdesc">Kuniga 500k+ tranzaksiyani qayta ishlaydigan taqsimlangan to'lov tizimi.</p>
+        <span class="pstack">Go · Kafka · PostgreSQL</span>
+        <span class="arrow">↗</span>
+      </div>
+      <div class="project">
+        <span class="pnum">02</span>
+        <h3>LogiTrack — logistika platformasi</h3>
+        <p class="pdesc">Real vaqtda yuk kuzatuvi va marshrut optimallashtirish tizimi.</p>
+        <span class="pstack">Node.js · Redis · AWS</span>
+        <span class="arrow">↗</span>
+      </div>
+      <div class="project">
+        <span class="pnum">03</span>
+        <h3>EduCloud — ta'lim API'lari</h3>
+        <p class="pdesc">100+ maktab uchun markazlashtirilgan ta'lim ma'lumotlar platformasi.</p>
+        <span class="pstack">Python · GraphQL · K8s</span>
+        <span class="arrow">↗</span>
+      </div>
+      <div class="project">
+        <span class="pnum">04</span>
+        <h3>NovaBank — ichki bank tizimi</h3>
+        <p class="pdesc">Mikroservis arxitekturasiga asoslangan xavfsiz bank backend infratuzilmasi.</p>
+        <span class="pstack">Go · gRPC · Terraform</span>
+        <span class="arrow">↗</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experience" style="background:var(--bg-2);">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div class="eyebrow">Tajriba yo'li</div>
+      <h2>Karyera bosqichlari.</h2>
+    </div>
+    <div class="timeline reveal">
+      <div class="tl-item">
+        <span class="tl-year">2023 — Hozirgacha</span>
+        <h3>Senior Backend Engineer</h3>
+        <span class="org">Nova Systems</span>
+        <p>Kompaniyaning asosiy to'lov infratuzilmasini loyihalash va rivojlantirishga rahbarlik qilaman, jamoa mentori sifatida ham faoliyat yuritaman.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-year">2020 — 2023</span>
+        <h3>Backend Engineer</h3>
+        <span class="org">CloudBridge LLC</span>
+        <p>Mikroservislarga o'tish jarayonini boshqardim, tizim javob vaqtini 40% ga qisqartirdim.</p>
+      </div>
+      <div class="tl-item">
+        <span class="tl-year">2018 — 2020</span>
+        <h3>Junior Developer</h3>
+        <span class="org">TechnoPark Startup</span>
+        <p>MVP mahsulotlar uchun API va ma'lumotlar bazasi arxitekturasini ishlab chiqdim.</p>
+      </div>
+    </div>
+
+    <div class="awards-strip reveal">
+      <div class="award">
+        <div class="medal">★</div>
+        <h4>Yilning Muhandisi</h4>
+        <p>Nova Systems, 2024</p>
+      </div>
+      <div class="award">
+        <div class="medal">◆</div>
+        <h4>AWS Sertifikatlangan<br>Yechim Arxitektori</h4>
+        <p>Amazon Web Services</p>
+      </div>
+      <div class="award">
+        <div class="medal">▲</div>
+        <h4>Ochiq Kod Hissasi</h4>
+        <p>500+ GitHub yulduzchasi</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-plaque reveal">
+      <div class="eyebrow">Aloqa</div>
+      <h2>Loyihangizni birga<br>hayotga tatbiq qilaylik.</h2>
+      <p>Yangi loyiha, hamkorlik yoki shunchaki savolingiz bormi? Yozib qoldiring — tez orada javob beraman.</p>
+      <div class="contact-links">
+        <a href="mailto:sarvar.aliyev@example.com" class="btn btn-gold">Email yozish</a>
+        <a href="#" class="btn btn-ghost">LinkedIn</a>
+        <a href="#" class="btn btn-ghost">GitHub</a>
+        <a href="#" class="btn btn-ghost">Telegram</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>© 2026 Sarvar Aliyev. Barcha huquqlar himoyalangan.</footer>
+
+<script>
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  });
+
+  const revealEls = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.12});
+  revealEls.forEach(el => io.observe(el));
+
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', function(e){
+      const target = document.querySelector(this.getAttribute('href'));
+      if(target){
+        e.preventDefault();
+        target.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
